@@ -10,6 +10,7 @@ require (
 
 require (
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.3 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/nedpals/supabase-go v0.5.0 // indirect
 	github.com/supabase-community/functions-go v0.0.0-20220927045802-22373e6cb51d // indirect
