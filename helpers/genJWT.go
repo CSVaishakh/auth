@@ -7,12 +7,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func GenJWT (userId string,role string,expiry time.Duration, tokenType string) (string, error) {
+func GenJWT (userId string,role string,expiry time.Duration, tokenType string) (string,string, error) {
 	load_err := godotenv.Load()
-	if load_err != nil { return "env error",load_err }
+	if load_err != nil { return "env error","",load_err }
 	key := os.Getenv("JWT_SECRET")
-
+	token_id := GenUUID()
 	claims := jwt.MapClaims{
+		"token_id": token_id,
 		"sub":userId,
 		"role":role,
 		"type":tokenType,
@@ -24,7 +25,7 @@ func GenJWT (userId string,role string,expiry time.Duration, tokenType string) (
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
 	signedToken, err :=token.SignedString([]byte(key)) 
 
-	if err != nil { return "token error : ",err }
+	if err != nil { return "","",err }
 
-	return signedToken, err
+	return signedToken, token_id, err
 }
