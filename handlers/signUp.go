@@ -1,38 +1,44 @@
-package utils
+package handlers
 
 import (
 	"fmt"
 	"go-auth-app/helpers"
 	"go-auth-app/types"
-	"time"
-	"github.com/gofiber/fiber/v2"
 	"log"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-
-func SignUp(c *fiber.Ctx) (string, error) {
+func SignUp(c *fiber.Ctx) error {
 
 	client, db_err := helpers.InItClient()
 	cred, err := helpers.DecodeJSON(c)
-	
+
 	var role_codes []types.RoleCode
 	var user types.User
 	var role string
 	var secret types.Secret
 	if err != nil {
-		return " api request error", err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":err.Error(),
+		})
 	}
 
 	password := cred.Password
 	hasshedPass, err := helpers.HashPass(password)
 
 	if db_err != nil {
-		return "db conecttion error", db_err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": db_err.Error(),
+		})
 	}
 
 	query_err := client.DB.From("rolecodes").Select("*").Execute(&role_codes)
 	if query_err != nil {
-		return "databse querying error", query_err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":query_err.Error(),
+		})
 	}
 
 	for i := 0; i < len(role_codes); i++ {
@@ -50,7 +56,9 @@ func SignUp(c *fiber.Ctx) (string, error) {
 
 	query_err = client.DB.From("users").Insert(user).Execute(nil)
 	if query_err != nil {
-		return "Unable to create user, serverside error", query_err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":query_err.Error(),
+		})
 	}
 	log.Println("Added data to user table")
 
@@ -59,10 +67,13 @@ func SignUp(c *fiber.Ctx) (string, error) {
 
 	query_err = client.DB.From("secrets").Insert(secret).Execute(nil)
 	if query_err != nil {
-		return "Unable to create user, serverside error", query_err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":query_err.Error(),
+		})
 	}
 	log.Println("Added the secret")
 
-
-	return "User created successfully, please LogIn", err
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message" : "SignUp successful, Please Login",
+	})
 }
