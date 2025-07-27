@@ -26,5 +26,21 @@ func main () {
 		})
 	})
 
+	app.Post("/signin", func(c *fiber.Ctx) error {
+		token, err := utils.SignIn(c)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error" : "Token not genrated",
+				"details" : err.Error(),
+			})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"refresh_token": token,
+			"token_type": "Bearer",
+			"lifetime": 14400, 
+		})
+	})
+
 	log.Fatal(app.Listen(":5000"))
 }
