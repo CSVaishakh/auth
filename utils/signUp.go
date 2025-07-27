@@ -9,20 +9,16 @@ import (
 	"log"
 )
 
-type Credentials = types.Credentials
-type RoleCode = types.RoleCode
-type User = types.User
-type Secret = types.Secret
 
 func SignUp(c *fiber.Ctx) (string, error) {
 
 	client, db_err := helpers.InItClient()
 	cred, err := helpers.DecodeJSON(c)
 	
-	var role_codes []RoleCode
-	var user User
+	var role_codes []types.RoleCode
+	var user types.User
 	var role string
-	var secret Secret
+	var secret types.Secret
 	if err != nil {
 		return " api request error", err
 	}

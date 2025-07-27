@@ -3,9 +3,9 @@ package utils
 import (
 	"errors"
 	"go-auth-app/helpers"
+	"go-auth-app/types"
 	"os"
 	"strings"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
@@ -14,7 +14,7 @@ import (
 func SignOut(c *fiber.Ctx) (string,error) {
 	load_err := godotenv.Load()
 	client, err := helpers.InItClient()
-	var refreshToken Token
+	var refreshToken types.Token
 
 	if load_err != nil { return "env error",load_err }
 	if err != nil { return "",err }
@@ -38,7 +38,7 @@ func SignOut(c *fiber.Ctx) (string,error) {
 	tokenId:= claims["token_id"].(string)
 
 	query_err := client.DB.From("jwt_tokens").Select("*").Eq("token_id",tokenId).Execute(&refreshToken)
-	if query_err != nil { return  "", errors.New("Token retrival error")}
+	if query_err != nil { return  "", errors.New("token retrival error")}
 
 	return "SignOut Complete",nil
 }

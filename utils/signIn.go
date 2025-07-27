@@ -8,15 +8,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Token = types.Token
 
 func SignIn (c *fiber.Ctx)  (string,error){
 	
 	client, db_err := helpers.InItClient()
 	cred,err := helpers.DecodeJSON(c)
-	var user User
+	var user types.User
 	var hasshedPass string
-	var token Token
+	var token types.Token
 	expiry := 4*time.Hour
 
 	if err != nil { return "",err }
