@@ -26,7 +26,17 @@ type User struct {
 	CreatedAt string `json:"created_at" db:"created_at"`
 }
 
-type UserRole struct{
+type UserRole struct {
 	UserId string `json:"userid" db:"userid"`
 	TeamId string `json:"team_id" db:"team_id"`
+}
+
+type Token struct {
+	Token_id string `json:"token_id" db:"token_id"`
+	UserId string `json:"userid" db:"userid"`
+	Role string `json:"role" db:"role"`
+	Type string `json:"token_type" db:"token__type"`
+	Exp string `json:"expires_at" db:"expires_at"`
+	Iat string `json:"issues_at" db:"issued_at"`
+	Status bool `json:"status" db:"status"`
 }

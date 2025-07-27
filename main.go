@@ -42,5 +42,18 @@ func main () {
 		})
 	})
 
+	app.Post("/signout", func(c *fiber.Ctx) error {
+		msg,err := utils.SignOut(c)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error" : err.Error(),
+			})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"message" : msg,
+		})
+
+	})
 	log.Fatal(app.Listen(":5000"))
 }
