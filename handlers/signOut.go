@@ -1,25 +1,34 @@
-package utils
+package handlers
 
 import (
-	"errors"
 	"go-auth-app/helpers"
-	"go-auth-app/types"
 	"github.com/gofiber/fiber/v2"
 
 )
 
-func SignOut(c *fiber.Ctx) (string,error) {
-	client, err := helpers.InItClient()
-	var refreshToken types.Token = 
-	if err != nil { return err }
+func SignOut(c *fiber.Ctx) error {
+	client, err := helpers.InItClient() 
+	if err != nil { 
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error" : err.Error(),
+		})	
+	}
 
+	tokenId := c.Locals("token_id").(string)
+	userId := c.Locals("userid").(string) 
 
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok { return "",errors.New("invalid claims") }
-	tokenId:= claims["token_id"].(string)
+	query_err := client.DB.From("jwt_tokens").
+	Update(map[string]interface{}{"status":false}).
+	Eq("token_id",tokenId).
+	Eq("userid",userId).
+	Execute(nil)
+	if query_err != nil { 
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error" : "error revoking token",
+		})
+	}
 
-	query_err := client.DB.From("jwt_tokens").Select("*").Eq("token_id",tokenId).Execute(&refreshToken)
-	if query_err != nil { return  "", errors.New("token retrival error")}
-
-	return "SignOut Complete",nil
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message" : "SignOut successful",
+	})
 }
