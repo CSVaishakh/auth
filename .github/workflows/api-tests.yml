@@ -1,0 +1,33 @@
+name : Testing the latest Auth-Service version 
+
+on :
+    push:
+        branches : [main]
+    pull_request:
+        branches : [main]
+
+jobs :
+    test :
+        runs-on : ubuntu-latest
+
+        steps :
+            - name : Checkout Code
+              uses : actions/checkout@v3
+            
+            - name : Setup Enviornment
+              uses : actions/setup-go@v5
+              with : 
+                go-version : '1.22.5'
+            
+            - name : Install Dependancies
+              run : go mod tidy
+
+            - name : Build
+              run : go build -o ./auth-service
+            
+            - name : Test Build 
+              run : go run auth-service &
+                    SERVER_PID=$!
+                    sleep 3
+                    echo "Server built and run properly"
+                    kill $SERVER_PID
