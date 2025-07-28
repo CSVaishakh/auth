@@ -13,21 +13,21 @@ import (
 func SignUp(c *fiber.Ctx) error {
 
 	client, db_err := helpers.InItClient()
-	cred, err := helpers.DecodeJSON(c)
-
 	var role_codes []types.RoleCode
-	var user types.User
+	var data map[string]string
 	var role string
+	var user types.User
 	var secret types.Secret
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
 
 	if db_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": db_err.Error(),
+		})
+	}
+
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body",
 		})
 	}
 
@@ -39,7 +39,7 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	for i := 0; i < len(role_codes); i++ {
-		if cred.Role_code == role_codes[i].Code {
+		if data["role_code"] == role_codes[i].Code {
 			role = role_codes[i].Role
 			fmt.Println("Verified user role")
 		}
@@ -47,8 +47,8 @@ func SignUp(c *fiber.Ctx) error {
 
 	user.Role = role
 	user.UserId = helpers.GenUUID()
-	user.Email = cred.Email
-	user.Username = cred.Username
+	user.Email = data["email"]
+	user.Username = data["username"]
 	user.CreatedAt = time.Now().Format(time.RFC3339)
 
 	query_err = client.DB.From("users").Insert(user).Execute(nil)
@@ -59,7 +59,7 @@ func SignUp(c *fiber.Ctx) error {
 	}
 	log.Println("Added data to user table")
 
-	password := cred.Password
+	password := data["password"]
 	hashedPass, err := helpers.HashPass(password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
