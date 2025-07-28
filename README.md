@@ -52,3 +52,18 @@ Configure the following environment variables:
 - github.com/nedpals/supabase-go
 - golang.org/x/crypto
 - github.com/google/uuid
+
+## Documentation
+
+- **[Complete Documentation](docs/DOCUMENTATION.md)** - Detailed technical documentation
+- **[Database Guide](docs/DATABASE.md)** - Database schema, connections, and configuration
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute to the project
+- **[Development Conventions](docs/CONVENTIONS.md)** - Naming conventions and commit guidelines
+
+## Quick Links
+
+- [API Documentation](DOCUMENTATION.md#api-documentation)
+- [Database Schema](DATABASE.md#database-schema)
+- [Environment Setup](DATABASE.md#configuration)
+- [Contributing Guidelines](CONTRIBUTING.md)
+- [Coding Standards](CONVENTIONS.md)
