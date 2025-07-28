@@ -21,12 +21,9 @@ func SignUp(c *fiber.Ctx) error {
 	var secret types.Secret
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":err.Error(),
+			"error": err.Error(),
 		})
 	}
-
-	password := cred.Password
-	hasshedPass, err := helpers.HashPass(password)
 
 	if db_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -37,7 +34,7 @@ func SignUp(c *fiber.Ctx) error {
 	query_err := client.DB.From("rolecodes").Select("*").Execute(&role_codes)
 	if query_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":query_err.Error(),
+			"error": query_err.Error(),
 		})
 	}
 
@@ -57,23 +54,30 @@ func SignUp(c *fiber.Ctx) error {
 	query_err = client.DB.From("users").Insert(user).Execute(nil)
 	if query_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":query_err.Error(),
+			"error": query_err.Error(),
 		})
 	}
 	log.Println("Added data to user table")
 
-	secret.Password = hasshedPass
+	password := cred.Password
+	hashedPass, err := helpers.HashPass(password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	secret.Password = hashedPass
 	secret.UserId = user.UserId
 
 	query_err = client.DB.From("secrets").Insert(secret).Execute(nil)
 	if query_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":query_err.Error(),
+			"error": query_err.Error(),
 		})
 	}
 	log.Println("Added the secret")
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message" : "SignUp successful, Please Login",
+		"message": "SignUp successful, Please Login",
 	})
 }
