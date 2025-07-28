@@ -26,7 +26,8 @@ jobs :
               run : go build -o ./auth-service
             
             - name : Test Build 
-              run : go run auth-service &
+              run : |
+                    ./auth-service &
                     SERVER_PID=$!
                     sleep 3
                     echo "Server built and run properly"
