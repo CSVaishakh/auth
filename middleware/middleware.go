@@ -52,7 +52,7 @@ func VerifyToken (c *fiber.Ctx) error {
 
 	c.Locals("token_id",token_id)
 
-	userid, ok := claims["userid"].(string)
+	userid, ok := claims["sub"].(string)
 	if !ok { 
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error" : "invalid userid",
