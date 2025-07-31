@@ -36,8 +36,6 @@ func SignIn(c *fiber.Ctx) error {
 	fmt.Println(data["email"])
 
 	query_err := client.DB.From("users").Select("*").Execute(&users)
-	fmt.Println(query_err)
-	fmt.Println(len(users))
 	if query_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": query_err.Error(),
@@ -54,8 +52,6 @@ func SignIn(c *fiber.Ctx) error {
 			user = users[i]
 		}
 	}
-	fmt.Println(user)
-
 
 	query_err = client.DB.From("secrets").Select("*").Eq("userid",user.UserId).Execute(&storedHashs)
 	if query_err != nil {
