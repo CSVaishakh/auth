@@ -23,6 +23,8 @@ func main() {
 
 	app.Post("/signout",middleware.VerifyToken,handlers.SignOut)
 	app.Get("/profile",middleware.VerifyToken,handlers.GetProfile)
+
 	app.Get("/verify",middleware.VerifyToken)	
+	
 	log.Fatal(app.Listen(":5000"))
 }
