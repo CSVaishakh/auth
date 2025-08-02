@@ -62,10 +62,9 @@ func VerifyToken (c *fiber.Ctx) error {
 
 	if c.Path() == "/verify" {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"message": "Token is valid",
 			"userid":  userid,
 		})
 	}
-	
+
 	return c.Next()
 }
