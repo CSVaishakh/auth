@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"go-auth-app/helpers"
+	"go-auth-app/utils"
 	"go-auth-app/types"
 	"log"
 	"time"
@@ -12,7 +12,7 @@ import (
 
 func SignUp(c *fiber.Ctx) error {
 
-	client, db_err := helpers.InItClient()
+	client, db_err := utils.InItClient()
 	var role_codes []types.RoleCode
 	var data map[string]string
 	var role string
@@ -39,17 +39,18 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	for i := 0; i < len(role_codes); i++ {
-		if data["role_code"] == role_codes[i].Code {
+		if data["roleCode"] == role_codes[i].Code {
 			role = role_codes[i].Role
 			fmt.Println("Verified user role")
 		}
 	}
 
 	user.Role = role
-	user.UserId = helpers.GenUUID()
+	user.UserId = utils.GenUUID()
 	user.Email = data["email"]
-	user.Username = data["username"]
+	user.Username = data["name"]
 	user.CreatedAt = time.Now().Format(time.RFC3339)
+	fmt.Println(user)
 
 	query_err = client.DB.From("users").Insert(user).Execute(nil)
 	if query_err != nil {
@@ -60,7 +61,7 @@ func SignUp(c *fiber.Ctx) error {
 	log.Println("Added data to user table")
 
 	password := data["password"]
-	hashedPass, err := helpers.HashPass(password)
+	hashedPass, err := utils.HashPass(password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
