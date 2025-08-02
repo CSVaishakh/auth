@@ -39,7 +39,7 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	for i := 0; i < len(role_codes); i++ {
-		if data["role_code"] == role_codes[i].Code {
+		if data["roleCode"] == role_codes[i].Code {
 			role = role_codes[i].Role
 			fmt.Println("Verified user role")
 		}
@@ -48,8 +48,9 @@ func SignUp(c *fiber.Ctx) error {
 	user.Role = role
 	user.UserId = utils.GenUUID()
 	user.Email = data["email"]
-	user.Username = data["username"]
+	user.Username = data["name"]
 	user.CreatedAt = time.Now().Format(time.RFC3339)
+	fmt.Println(user)
 
 	query_err = client.DB.From("users").Insert(user).Execute(nil)
 	if query_err != nil {
