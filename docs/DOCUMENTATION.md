@@ -33,7 +33,7 @@ auth-OMP/
 │   ├── signUp.go          # User registration handler
 │   ├── signIn.go          # User authentication handler
 │   └── signOut.go         # User logout handler
-├── helpers/                # Utility functions
+├── utils/                # Utility functions
 │   ├── initClient.go      # Supabase client initialization
 │   ├── genJWT.go          # JWT token generation
 │   ├── genUUID.go         # UUID generation
@@ -55,7 +55,7 @@ auth-OMP/
 - **signIn.go**: Manages user authentication and JWT token generation
 - **signOut.go**: Handles user logout by revoking JWT tokens
 
-#### Helpers Directory
+#### utils Directory
 - **initClient.go**: Initializes and configures Supabase database client
 - **genJWT.go**: Generates JWT tokens with custom claims and expiration
 - **genUUID.go**: Generates unique identifiers for users and tokens

@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"go-auth-app/helpers"
+	"go-auth-app/utils"
 	"github.com/gofiber/fiber/v2"
 
 )
 
 func SignOut(c *fiber.Ctx) error {
-	client, err := helpers.InItClient() 
+	client, err := utils.InItClient() 
 	if err != nil { 
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error" : err.Error(),

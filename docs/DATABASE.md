@@ -20,7 +20,7 @@ The application connects to Supabase using the official Go client library. All d
 
 #### Client Initialization
 ```go
-// helpers/initClient.go
+// utils/initClient.go
 func InItClient() (*supabase.Client, error) {
     err := godotenv.Load()
     if err != nil {
@@ -175,7 +175,7 @@ FOR ALL USING (userid = current_user_id());
 ```go
 func DatabaseOperation(c *fiber.Ctx) error {
     // Initialize client
-    client, err := helpers.InItClient()
+    client, err := utils.InItClient()
     if err != nil {
         return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
             "error": err.Error(),

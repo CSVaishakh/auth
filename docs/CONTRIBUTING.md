@@ -134,7 +134,7 @@ The server will start on port 5000.
 ```
 auth-OMP/
 ├── handlers/          # HTTP request handlers
-├── helpers/           # Utility functions
+├── utils/           # Utility functions
 ├── middleware/        # HTTP middleware
 ├── types/            # Data structures
 ├── tests/            # Test files (when added)
@@ -143,7 +143,7 @@ auth-OMP/
 
 ### Package Guidelines
 - **handlers**: Contains HTTP route handlers
-- **helpers**: Utility functions that can be reused
+- **utils**: Utility functions that can be reused
 - **middleware**: HTTP middleware for request processing
 - **types**: Data structure definitions
 

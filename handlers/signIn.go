@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"go-auth-app/helpers"
+	"go-auth-app/utils"
 	"go-auth-app/types"
 	"strconv"
 	"time"
@@ -12,7 +12,7 @@ import (
 
 func SignIn(c *fiber.Ctx) error {
 
-	client, db_err := helpers.InItClient()
+	client, db_err := utils.InItClient()
 	var data map[string]string
 	var users []types.User
 	var user types.User
@@ -60,7 +60,7 @@ func SignIn(c *fiber.Ctx) error {
 		})
 	}
 	storedHash = storedHashs[0]
-	validation_err := helpers.ValidatePassword(data["password"],storedHash.Password)
+	validation_err := utils.ValidatePassword(data["password"],storedHash.Password)
 
 	if validation_err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
@@ -68,7 +68,7 @@ func SignIn(c *fiber.Ctx) error {
 		})
 	}
 
-	refreshToken, token_id, gen_err := helpers.GenJWT(user.UserId, user.Role, expiry, "refresh")
+	refreshToken, token_id, gen_err := utils.GenJWT(user.UserId, user.Role, expiry, "refresh")
 
 	if gen_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

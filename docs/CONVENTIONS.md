@@ -110,7 +110,7 @@ type PasswordHasher interface {
 ```go
 // Use lowercase, single word when possible
 package handlers
-package helpers  
+package utils  
 package middleware
 package types
 
@@ -323,7 +323,7 @@ import (
     "github.com/golang-jwt/jwt/v5"
     
     // Local imports last
-    "go-auth-app/helpers"
+    "go-auth-app/utils"
     "go-auth-app/types"
 )
 ```
@@ -409,7 +409,7 @@ docs(api): update authentication endpoint documentation
 
 #### Refactoring Commits
 ```
-refactor(helpers): extract common validation logic
+refactor(utils): extract common validation logic
 
 - Create shared validation utilities
 - Reduce code duplication across handlers

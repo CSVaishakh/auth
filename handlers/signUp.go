@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"go-auth-app/helpers"
+	"go-auth-app/utils"
 	"go-auth-app/types"
 	"log"
 	"time"
@@ -12,7 +12,7 @@ import (
 
 func SignUp(c *fiber.Ctx) error {
 
-	client, db_err := helpers.InItClient()
+	client, db_err := utils.InItClient()
 	var role_codes []types.RoleCode
 	var data map[string]string
 	var role string
@@ -46,7 +46,7 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	user.Role = role
-	user.UserId = helpers.GenUUID()
+	user.UserId = utils.GenUUID()
 	user.Email = data["email"]
 	user.Username = data["username"]
 	user.CreatedAt = time.Now().Format(time.RFC3339)
@@ -60,7 +60,7 @@ func SignUp(c *fiber.Ctx) error {
 	log.Println("Added data to user table")
 
 	password := data["password"]
-	hashedPass, err := helpers.HashPass(password)
+	hashedPass, err := utils.HashPass(password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
