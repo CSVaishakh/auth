@@ -13,9 +13,7 @@ import (
 func SignUp(c *fiber.Ctx) error {
 
 	client, db_err := utils.InItClient()
-	var role_codes []types.RoleCode
 	var data map[string]string
-	var role string
 	var user types.User
 	var secret types.Secret
 
@@ -31,28 +29,14 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 
-	query_err := client.DB.From("rolecodes").Select("*").Execute(&role_codes)
-	if query_err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": query_err.Error(),
-		})
-	}
 
-	for i := 0; i < len(role_codes); i++ {
-		if data["roleCode"] == role_codes[i].Code {
-			role = role_codes[i].Role
-			fmt.Println("Verified user role")
-		}
-	}
-
-	user.Role = role
 	user.UserId = utils.GenUUID()
 	user.Email = data["email"]
 	user.Username = data["name"]
 	user.CreatedAt = time.Now().Format(time.RFC3339)
 	fmt.Println(user)
 
-	query_err = client.DB.From("users").Insert(user).Execute(nil)
+	query_err := client.DB.From("users").Insert(user).Execute(nil)
 	if query_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": query_err.Error(),
