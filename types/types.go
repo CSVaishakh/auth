@@ -40,3 +40,11 @@ type Token struct {
 	Iat string `json:"issued_at" db:"issued_at"`
 	Status bool `json:"status" db:"status"`
 }
+
+type Admin struct {
+	UserId    string `json:"userid" db:"userid"`
+	Email     string `json:"email" db:"email"`
+	Username  string `json:"name" db:"name,omitempty"`
+	LisenceKey string `json:"lisence_key" db:"lisence_key,omitempty"`
+	CreatedAt string `json:"created_at" db:"created_at,omitempty"`
+}
