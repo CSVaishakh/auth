@@ -4,13 +4,9 @@ type Credentials struct {
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 	Username  string `json:"name"`
-	Role_code string `json:"role_code"`
+	Role string `json:"role"`
 }
 
-type RoleCode struct {
-	Role string `json:"role" db:"role"`
-	Code string `json:"code" db:"code"`
-}
 
 type Secret struct {
 	Password string `json:"password" db:"password"`

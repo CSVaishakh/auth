@@ -4,28 +4,30 @@ import (
 	"go-auth-app/types"
 	"go-auth-app/utils"
 
-	"time"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func AdminSignUp (c*fiber.Ctx) error {
+func AdminSignUp(c *fiber.Ctx) error {
 	client, db_err := utils.InItClient()
 	var data map[string]string
 	var user types.Admin
 	var secret types.Secret
-	var licenses []struct { LicenseKey string `json:"license_key"` }
+	var licenses []struct {
+		LicenseKey string `json:"license_key"`
+	}
 	var found bool
 
 	if db_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error" : db_err.Error(),
+			"error": db_err.Error(),
 		})
 	}
 
-	if err := c.BodyParser(&data);err != nil {
+	if err := c.BodyParser(&data); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "invalid request body",
 		})
@@ -37,7 +39,6 @@ func AdminSignUp (c*fiber.Ctx) error {
 	user.CreatedAt = time.Now().Format(time.RFC3339)
 	user.Role = "Admin"
 	user.LicenseKey = data["license_key"]
-	fmt.Println(user)
 
 	query_err := client.DB.From("user_licenses").Select("license_key").Execute(&licenses)
 	if query_err != nil {
@@ -46,8 +47,8 @@ func AdminSignUp (c*fiber.Ctx) error {
 		})
 	}
 
-	for _,l := range licenses{
-		if user.LicenseKey == l.LicenseKey{
+	for _, l := range licenses {
+		if user.LicenseKey == l.LicenseKey {
 			found = true
 			break
 		}
@@ -58,15 +59,15 @@ func AdminSignUp (c*fiber.Ctx) error {
 			"error": "invalid license key",
 		})
 	}
-
-	query_err = client.DB.From("user_licenses").Update(map[string]interface{}{"user_id": user.UserId,}).Eq("license_key",user.LicenseKey).Execute(nil)
-	if query_err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": query_err.Error(),
-		})
+	
+	payload := map[string]interface{}{
+		"userid":     user.UserId,
+		"email":       user.Email,
+		"name":    user.Username,
+		"created_at":  user.CreatedAt,
+		"role":        user.Role,
 	}
-
-	query_err = client.DB.From("users").Insert(user).Execute(nil)
+	query_err = client.DB.From("users").Insert(payload).Execute(nil)
 	if query_err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": query_err.Error(),

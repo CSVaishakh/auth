@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-auth-app/utils"
 	"go-auth-app/types"
+
 	"log"
 	"time"
 
@@ -33,6 +34,7 @@ func SignUp(c *fiber.Ctx) error {
 	user.UserId = utils.GenUUID()
 	user.Email = data["email"]
 	user.Username = data["name"]
+	user.Role = ""
 	user.CreatedAt = time.Now().Format(time.RFC3339)
 	fmt.Println(user)
 

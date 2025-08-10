@@ -47,11 +47,19 @@ func SignIn(c *fiber.Ctx) error {
 			"error": "no valid user",
 		})
 	}
+
 	for i:=0;i<len(users);i++ {
 		if users[i].Email == data["email"]{
 			user = users[i]
 		}
 	}
+
+	if user.Role == "" {
+		return c.Status(fiber.StatusPreconditionFailed).JSON(fiber.Map{
+			"error" : "Role not assigned, please contact admin",
+		})
+	}
+
 
 	query_err = client.DB.From("secrets").Select("*").Eq("userid",user.UserId).Execute(&storedHashs)
 	if query_err != nil {
