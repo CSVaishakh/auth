@@ -20,6 +20,7 @@ func main() {
 
 	app.Post("/signup",handlers.SignUp)
 	app.Post("/signin",handlers.SignIn)
+	app.Post("/admin-signup",handlers.AdminSignUp)
 
 	app.Post("/signout",middleware.VerifyToken,handlers.SignOut)
 	app.Get("/profile",middleware.VerifyToken,handlers.GetProfile)
