@@ -4,7 +4,6 @@ import (
 	"go-auth-app/types"
 	"go-auth-app/utils"
 
-	"fmt"
 	"log"
 	"time"
 
