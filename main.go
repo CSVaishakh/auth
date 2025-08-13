@@ -3,6 +3,7 @@ package main
 import (
 	"go-auth-app/handlers"
 	"go-auth-app/middleware"
+	
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +14,7 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3000",
+		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 	}))
@@ -25,7 +26,11 @@ func main() {
 	app.Post("/signout",middleware.VerifyToken,handlers.SignOut)
 	app.Get("/profile",middleware.VerifyToken,handlers.GetProfile)
 
-	app.Get("/verify",middleware.VerifyToken)	
+	app.Get("/verify", middleware.VerifyToken, func(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"userid": c.Locals("userid"),
+	})
+})
 	
 	log.Fatal(app.Listen(":5000"))
 }
