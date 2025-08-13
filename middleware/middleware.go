@@ -1,15 +1,18 @@
 package middleware
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 
 	"os"
 	"strings"
 )
 
 func VerifyToken (c *fiber.Ctx) error {
+	fmt.Println("verifying")
 	load_err := godotenv.Load()
 	if load_err != nil { 
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -59,12 +62,6 @@ func VerifyToken (c *fiber.Ctx) error {
 		})
 	}
 	c.Locals("userid",userid)
-
-	if c.Path() == "/verify" {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"userid":  userid,
-		})
-	}
 
 	return c.Next()
 }
